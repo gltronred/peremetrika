@@ -1,2 +1,6 @@
 /modelling/dist*
 /modelling/.ghcid
+
+
+neural-net/model_data/yolo.h5
+*.pyc
