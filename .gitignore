@@ -4,3 +4,4 @@
 
 neural-net/model_data/yolo.h5
 *.pyc
+.idea*

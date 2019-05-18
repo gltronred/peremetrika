@@ -11,6 +11,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from yolo import YOLO
+import json
 
 from deep_sort import preprocessing
 from deep_sort import nn_matching
@@ -19,6 +20,16 @@ from deep_sort.tracker import Tracker
 from tools import generate_detections as gdet
 from deep_sort.detection import Detection as ddet
 warnings.filterwarnings('ignore')
+
+
+class MyTrack:
+    def __init__(self, frame_id, center):
+        self.frame_id = frame_id
+        self.center= center
+
+def save_directions(directions, path):
+    with open(path, 'w') as f:
+        f.write(directions)
 
 def main(yolo):
 
@@ -34,10 +45,10 @@ def main(yolo):
     metric = nn_matching.NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
     tracker = Tracker(metric)
 
-    writeVideo_flag = True 
+    writeVideo_flag = False
     
-    # video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec.mp4")
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec.mp4")
+    # video_capture = cv2.VideoCapture(0)
 
     if writeVideo_flag:
     # Define the codec and create VideoWriter object
@@ -46,10 +57,14 @@ def main(yolo):
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         out = cv2.VideoWriter('output.avi', fourcc, 15, (w, h))
         list_file = open('detection.txt', 'w')
-        frame_index = -1 
-        
+        frame_index = -1
+
+
+    directions = {}
     fps = 0.0
+    frame_id = 0
     while True:
+        frame_id += 1
         ret, frame = video_capture.read()  # frame shape 640*480*3
         if ret != True:
             break
@@ -73,11 +88,18 @@ def main(yolo):
         # Call the tracker
         tracker.predict()
         tracker.update(detections)
+
         
         for track in tracker.tracks:
             if not track.is_confirmed() or track.time_since_update > 1:
-                continue 
+                continue
+
             bbox = track.to_tlbr()
+            if track.track_id not in directions:
+                directions[track.track_id] = []
+            bbox_center = ((int(bbox[0]) + int(bbox[2])) / 2, (int(bbox[1]) + int(bbox[3])) / 2)
+            directions[track.track_id].append((frame_id, bbox_center))
+
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
             cv2.putText(frame, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
 
@@ -109,6 +131,8 @@ def main(yolo):
         out.release()
         list_file.close()
     cv2.destroyAllWindows()
+
+    save_directions(json.dumps(directions), 'directions.json')
 
 if __name__ == '__main__':
     main(YOLO())
