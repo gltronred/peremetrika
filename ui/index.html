@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Переметрика: моделируем перекрёсток</title>
+        <meta charset='utf-8' />
+    </head>
+    <body>
+	
+
+<canvas id='canvas' width='600' height='600'>
+Canvas not supported
+</canvas>
+	
+<div id="readout"> </div>
+<input type='button' id="run" onclick="run()" value="Запустить симуляцию" />
+
+<div id="crossparam"> 
+<TABLE BORDER=1>
+<TR><TD>
+Левая ветвь <BR>
+Ширина <input type=number id="w1" onchange="entw1()" value=10 /> метров <BR>
+Входящих полос <input type=number id="l1" onchange="entw1()" value=1 /> <BR>
+Выходящих полос <input type=number id="l2" onchange="entw1()" value=1 /> <BR>
+Ширина разделительной <input type=number id="wr1" onchange="entw1()" value=0.5  /> метров 
+<P> 
+Верхняя ветвь <BR>
+Ширина <input type=number id="w2" onchange="entw1()" value=10  /> метров <BR>
+Входящих полос <input type=number id="l3" onchange="entw1()" value=1 /> <BR>
+Выходящих полос <input type=number id="l4" onchange="entw1()" value=1 /><BR>
+Ширина разделительной <input type=number id="wr2" onchange="entw1()" value=0.5  /> метров 
+<P> 
+Правая ветвь <BR>
+Ширина <input type=number id="w3" onchange="entw1()" value=10  /> метров <BR>
+Входящих полос <input type=number id="l5" onchange="entw1()" value=1 /> <BR>
+Выходящих полос <input type=number id="l6" onchange="entw1()" value=1 /><BR>
+Ширина разделительной <input type=number id="wr3" onchange="entw1()" value=0.5  /> метров 
+<P> 
+Нижняя ветвь <BR>
+Ширина <input type=number id="w4" onchange="entw1()" value=10  /> метров <BR>
+Входящих полос <input type=number id="l7" onchange="entw1()" value=1 /> <BR>
+Выходящих полос <input type=number id="l8" onchange="entw1()" value=1 /><BR>
+Ширина разделительной <input type=number id="wr4" onchange="entw1()" value=0.5  /> метров 
+<P>
+</TD><TD VALIGN=top>
+Цикл работы светофора <P />
+Светофор 1 <input type=number id="sv1" value=20> сек. <P />
+Светофор 2 <input type=number id="sv2" value=20> сек. <P />
+Светофор 3 <input type=number id="sv3" value=20> сек. <P />
+Светофор 4 <input type=number id="sv4" value=20> сек. <P />
+</TD></TR></TABLE> 
+
+</div>
+
+<script>
+var canvas = document.getElementById('canvas');
+var readout = document.getElementById('readout');
+var context = canvas.getContext('2d');
+var spritesheet = new Array(4);// = new Image();
+var cross = {left:100,right:100,top:100,down:100};
+var mode = "free";
+
+for (i=0;i<4;i++) spritesheet[i] = new Image();
+
+function run() {
+var xhr = new XMLHttpRequest();
+req="http://peremetrika.gltronred.info?width="+cross.left/10+","+cross.top/10+","+cross.right/10+","+cross.down/10+"&lines=";
+for (i=2;i<9;i++) req+=document.getElementById("l"+i).value+",";
+req+=document.getElementById("l1").value;
+    xhr.open('POST', req, false);
+    xhr.send();
+}
+
+function entw1(){
+	cross.left=document.getElementById("w1").value*10;
+	cross.top=document.getElementById("w2").value*10;
+	cross.right=document.getElementById("w3").value*10;
+	cross.down=document.getElementById("w4").value*10;
+	drawBackground();
+	drawSpritesheet();
+}
+// Functions
+function windowToCanvas(canvas, x, y) {
+  var bbox = canvas.getBoundingClientRect();
+  return { x: x - bbox.left * (canvas.width / bbox.width),
+    y: y - bbox.top * (canvas.height / bbox.height)
+  };
+}
+
+function drawBackground() {
+  var VERTICAL_LINE_SPACING = 12;
+  var i = context.canvas.height;
+  context.clearRect(0,0,canvas.width,canvas.height);
+  context.fillStyle="green";
+  context.fillRect (0,0, (canvas.width-cross.top)/2 ,(canvas.height-cross.left)/2);
+  context.fillRect ((canvas.width+cross.top)/2, 0, canvas.width ,(canvas.height-cross.right)/2);
+  context.fillRect (0,(canvas.height+cross.left)/2, (canvas.width-cross.down)/2 ,canvas.height);
+  context.fillRect ((canvas.width+cross.down)/2, (canvas.height+cross.right)/2, canvas.width , canvas.height);
+  
+  context.strokeStyle = 'lightgray';
+  context.lineWidth = 0.5;
+  while(i > VERTICAL_LINE_SPACING * 4) {
+    context.beginPath();
+    context.moveTo(0, i);
+    context.lineTo(context.canvas.width, i);
+    context.stroke();
+    i -= VERTICAL_LINE_SPACING;
+  }
+}
+
+function drawSpritesheet() {
+//for (i=0;i<4;i++)
+  context.drawImage(spritesheet[0], (canvas.width-cross.down)/2-50, (canvas.height+cross.left)/2);
+  context.drawImage(spritesheet[1], (canvas.width-cross.top)/2-20, (canvas.height-cross.left)/2-50);
+  context.drawImage(spritesheet[2], (canvas.width+cross.top)/2, (canvas.height-cross.right)/2-20);
+  context.drawImage(spritesheet[3], (canvas.width+cross.down)/2, (canvas.height+cross.right)/2);
+
+  //context.rotate(Math.PI);
+  }
+
+function drawGuidelines(x, y) {
+  context.strokeStyle = 'rgba(0,0,230,0.8)';
+  context.lineWidth = 0.5;
+  drawVerticalLine(x);
+  drawHorizontalLine(y);
+}
+
+function updateReadout(x, y, s) {
+  readout.innerText = '(' + x.toFixed(0) + ', ' + y.toFixed(0) + ')'+s;
+}
+  
+function drawHorizontalLine(y) {
+  context.beginPath();
+  context.moveTo(0, y + 0.5);
+  context.lineTo(context.canvas.width, y + 0.5);
+  context.stroke();
+}
+
+function drawVerticalLine(x) {
+  context.beginPath();
+  context.moveTo(x + 0.5, 0);
+  context.lineTo(x + 0.5, context.canvas.height);
+  context.stroke();
+}
+
+// Event handlers
+canvas.onmousemove = function (e) {
+  var loc = windowToCanvas(canvas, e.clientX, e.clientY);
+/*  if ( (e.clientX < canvas.width/2) && Math.abs(Math.abs(e.clientY-canvas.height/2)-cross.left/2)<5 ){
+		mode="eleft";
+	}
+	else mode="free";
+*/
+  
+  if (mode=="moveleft") {
+	cross.left=2*Math.abs(e.clientY-canvas.height/2);
+	document.getElementById('w1').value=cross.left/10;
+  }
+  else if (mode=="movetop") {
+  cross.top=2*Math.abs(e.clientX-canvas.width/2);
+  document.getElementById('w2').value=cross.top/10;
+  }
+  else if (mode=="moveright") {
+  cross.right=2*Math.abs(e.clientY-canvas.height/2);
+  document.getElementById('w3').value=cross.right/10;
+  }
+  else if (mode=="movedown") {
+  cross.down=2*Math.abs(e.clientX-canvas.width/2);
+  document.getElementById('w4').value=cross.down/10;
+  }
+  drawBackground();
+  drawSpritesheet();
+  drawGuidelines(loc.x, loc.y);
+  updateReadout(loc.x, loc.y, mode);
+};
+
+canvas.onmousedown = function (move) {
+	var loc = windowToCanvas(canvas, move.clientX, move.clientY);
+	mode="move "+move.clientX+move.clientY;
+	if ( (move.clientX < canvas.width/2) && Math.abs(Math.abs(move.clientY-canvas.height/2)-cross.left/2)<10 ){
+		mode="moveleft";
+	}
+	else if ( (move.clientX > canvas.width/2) && Math.abs(Math.abs(move.clientY-canvas.height/2)-cross.right/2)<10 ){
+		mode="moveright";
+	}
+	else if ( (move.clientY < canvas.height/2) && Math.abs(Math.abs(move.clientX-canvas.width/2)-cross.top/2)<10 ){
+		mode="movetop";
+	}
+	else if ( (move.clientY > canvas.height/2) && Math.abs(Math.abs(move.clientX-canvas.width/2)-cross.down/2)<10 ){
+		mode="movedown";
+	}
+	
+	//updateReadout(loc.x, loc.y, "down");
+}
+
+canvas.onmouseup = function (finmove) {
+	var loc = windowToCanvas(canvas, finmove.clientX, finmove.clientY);
+	//updateReadout(loc.x, loc.y, "up");
+	mode="free";
+}
+
+// Initialization
+for (i=0;i<4;i++) spritesheet[i].src = 'svetofor'+(i+1)+'.jpg';
+spritesheet.onload = function(e) {
+  drawSpritesheet();
+};
+
+drawBackground();
+
+</script>
+    </body>
+</html>
