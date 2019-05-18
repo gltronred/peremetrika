@@ -63,11 +63,23 @@ for (i=0;i<4;i++) spritesheet[i] = new Image();
 
 function run() {
 var xhr = new XMLHttpRequest();
-req="http://peremetrika.gltronred.info?width="+cross.left/10+","+cross.top/10+","+cross.right/10+","+cross.down/10+"&lines=";
+req="http://peremetrika.gltronred.info?width=";
+for (i=1;i<4;i++) req+=document.getElementById("w"+i).value+",";
+req+=document.getElementById("w4").value+"&lines=";
 for (i=2;i<9;i++) req+=document.getElementById("l"+i).value+",";
-req+=document.getElementById("l1").value;
+req+=document.getElementById("l1").value+"&safetylines=";
+for (i=1;i<4;i++) req+=document.getElementById("wr"+i).value+",";
+req+=document.getElementById("wr4").value;
+
+
     xhr.open('POST', req, false);
     xhr.send();
+
+	if (xhr.status != 200) {
+		alert("error");
+		return;
+	}
+	cars = JSON.parse(xhr.responseText);
 }
 
 function entw1(){
