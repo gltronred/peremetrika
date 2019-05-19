@@ -42,7 +42,7 @@
 Сбор информации с перекрестков осуществляется в 2 этапа:
 1) Обработка видео для сбора треков
 
-   Детектирование машин и пешеходов осуществляется с помощью нейронной сети [**YOLO** (*You only look once*)](https://pjreddie.com/darknet/yolo/).
+   Детектирование машин и пешеходов осуществляется с помощью нейронной сети [**YOLO** (*You Only Look Once*)](https://pjreddie.com/darknet/yolo/).
 
 <img src="https://github.com/gltronred/peremetrika/raw/master/readme_images/cross_tracking.png" alt="Demo" />
 
