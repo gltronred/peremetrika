@@ -2,51 +2,54 @@
 
 module Types where
 
+import Data.Aeson
 import Data.IntMap (IntMap)
-import Data.Map (Map)
-import Data.Time
 import GHC.Generics
 
-type LaneId = Int
+data Input = Input
+  { iSrc :: Int
+  , iDst :: Int
+  , iCount :: Int
+  } deriving (Eq,Show,Read,Generic)
 
-data Graph v e = Graph
-  { gVertices :: IntMap v
-  , gEdges :: Map (Int,Int) e
-  } deriving (Eq,Show,Read)
+instance FromJSON Input where
+  parseJSON = genericParseJSON opts
+instance ToJSON Input where
+  toJSON = genericToJSON opts
+  toEncoding = genericToEncoding opts
 
-data ElType
+data VehType
   = Car
-  | Bus
   | Person
   deriving (Eq,Show,Read,Generic)
 
-data FlowEl = FlowEl
-  { feType :: ElType
-  , feArrival :: UTCTime
-  , feSrc :: Int
-  , feTgt :: Int
+instance ToJSON VehType
+
+data Vehicle = Vehicle
+  { vX, vY :: Double
+  , vAngle :: Double
+  , vType :: VehType
   } deriving (Eq,Show,Read,Generic)
 
-data Part = Part
-  { pType :: ElType
-  , pFlowEl :: FlowEl
-  , pt, v :: Pt
+instance ToJSON Vehicle where
+  toJSON = genericToJSON opts
+  toEncoding = genericToEncoding opts
+
+data Output = Output
+  { oTime :: Double
+  , oVehicles :: [Vehicle]
   } deriving (Eq,Show,Read,Generic)
 
-data LightMode
-  = Red
-  | Yellow
-  | Green
-  deriving (Eq,Show,Read,Generic)
+instance ToJSON Output where
+  toJSON = genericToJSON opts
+  toEncoding = genericToEncoding opts
 
-type Pt = (Double,Double)
+opts :: Options
+opts = defaultOptions
+  { fieldLabelModifier = camelTo2 '-' . drop 1 }
 
-data Edge = Edge
-  { eLight :: LightMode
-  , eParts :: [Part]
-  } deriving (Eq,Show,Read,Generic)
+type State = IntMap (IntMap Int)
 
-data State = State
-  { sCrossroad :: Graph [FlowEl] Edge
-  } deriving (Eq,Show,Read,Generic)
+type IM = IntMap
+
 
