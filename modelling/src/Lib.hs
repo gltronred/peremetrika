@@ -121,7 +121,9 @@ pereMain = do
                    eitherDecode . B.pack <$> readProcess conv [] res
       S.json $ HM.fromList [ ("fcd" :: T.Text, fcd :: Value)
                            , ("stat", String $
+                                      T.unlines $
                                       reverse $ take 20 $ reverse $
+                                      T.lines $
                                       T.toStrict $ T.pack stat) ]
   putStrLn "Hello world!"
 
