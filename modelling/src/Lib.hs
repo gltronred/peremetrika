@@ -93,7 +93,7 @@ pereMain = do
   S.scotty 8080 $ do
     S.post "/query" $ do
       speed <- S.param "speed"
-      [tl1,tl2,tl3,tl4] <- S.param "svetofor"
+      [tl1,tl2,tl3,tl4] <- fmap (/3.6) <$> S.param "svetofor"
       -- apply template
       let context = HM.fromList
             [ ("speed" :: ST.Text, ST.pack $ show (speed :: Double))
@@ -120,6 +120,8 @@ pereMain = do
       Right fcd <- liftIO $
                    eitherDecode . B.pack <$> readProcess conv [] res
       S.json $ HM.fromList [ ("fcd" :: T.Text, fcd :: Value)
-                           , ("stat", String $ T.toStrict $ T.pack stat) ]
+                           , ("stat", String $
+                                      reverse $ take 20 $ reverse $
+                                      T.toStrict $ T.pack stat) ]
   putStrLn "Hello world!"
 
