@@ -77,6 +77,8 @@ MObility)](https://sumo.dlr.de/wiki/Simulation_of_Urban_MObility_-_Wiki). SUMO �
 
 Веб-сервер, необходимый для конвертации данных, написан на Haskell.
 
+[![Watch the video](https://github.com/gltronred/peremetrika/raw/master/readme_images/youtube_screenshot.png)](https://youtu.be/vJ24-_tPgiA)
+
 ### Отображение
 
 Для задания основных параметров перекрёстка написана форма ввода данных на
