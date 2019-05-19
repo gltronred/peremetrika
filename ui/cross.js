@@ -8,7 +8,7 @@ var timer;
 var svetTime = [42,2,42,3];
 var svetfull = 90;
 var speed = 52;
-var fcd=fcd2.fcd;
+
 
 space1.src = "cross.png";
 
