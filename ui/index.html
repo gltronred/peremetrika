@@ -21,34 +21,38 @@ Canvas not supported
 Левая ветвь <BR>
 Входящих полос <input type=number id="l1" onchange="entw1()" value=2 disabled/> <BR>
 Выходящих полос <input type=number id="l2" onchange="entw1()" value=2 disabled/> <BR>
+Ширина разделительной <input type=number id="wr1" onchange="entw1()" value=0  disabled/> метров 
 <P> 
 Верхняя ветвь <BR>
 Входящих полос <input type=number id="l3" onchange="entw1()" value=1 disabled/> <BR>
 Выходящих полос <input type=number id="l4" onchange="entw1()" value=1 disabled/><BR>
+Ширина разделительной <input type=number id="wr1" onchange="entw1()" value=0  disabled/> метров 
 <P> 
 Правая ветвь <BR>
 Входящих полос <input type=number id="l5" onchange="entw1()" value=2 disabled/> <BR>
 Выходящих полос <input type=number id="l6" onchange="entw1()" value=2 disabled/><BR>
+Ширина разделительной <input type=number id="wr1" onchange="entw1()" value=0  disabled/> метров 
 <P> 
 Нижняя ветвь <BR>
 Входящих полос <input type=number id="l7" onchange="entw1()" value=1 disabled/> <BR>
 Выходящих полос <input type=number id="l8" onchange="entw1()" value=1 disabled/><BR>
+Ширина разделительной <input type=number id="wr1" onchange="entw1()" value=0  disabled/> метров 
 <P>
 </TD><TD VALIGN=top>
 Ограничение скорости </ P>
-<input type=number id="speed" value=42> км/ч <P />
+<input type=number id="speed" value=52 onchange="entw1()"> км/ч <P />
 
 Цикл работы светофора <P />
-Светофор 1 <input type=number id="sv1" value=42> сек. <P />
-Жёлтый свет <input type=number id="sv2" value=3> сек. <P />
-Светофор 2 <input type=number id="sv3" value=42> сек. <P />
-Жёлтый свет <input type=number id="sv4" value=3> сек. <P />
+Светофор 1 <input type=number id="sv1" value=42 onchange="entw1()"> сек. <P />
+Жёлтый свет <input type=number id="sv2" value=3 onchange="entw1()"> сек. <P />
+Светофор 2 <input type=number id="sv3" value=42 onchange="entw1()"> сек. <P />
+Жёлтый свет <input type=number id="sv4" value=3 onchange="entw1()"> сек. <P />
 </TD></TR></TABLE> 
 <TEXTAREA id="xml1"></TEXTAREA>
 </div>
 
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="fcd.json"></script>
+<!--script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="fcd2.json"></script-->
 <script src="cross.js"></script>
 </body>
 </html>
