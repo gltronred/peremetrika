@@ -109,7 +109,7 @@ pereMain = do
                                      , "-t", "turns.xml"
                                      , "-n", "net.xml"
                                      , "-b", "0"
-                                     , "-e", "3600"
+                                     , "-e", "300"
                                      , "-o", "routes.xml"]
       stat <- liftIO $ readProcess sumo [ "-n", "net.xml"
                                         , "-r", "routes.xml"
