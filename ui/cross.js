@@ -25,4 +25,5 @@ function run(){
 		alert("error");
 		return;
 	}
+   console.log( xhr.responseText );
 }
