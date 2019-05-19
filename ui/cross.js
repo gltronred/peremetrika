@@ -9,7 +9,6 @@ var svetTime = [42,2,42,3];
 var svetfull = 90;
 var speed = 52;
 
-
 space1.src = "cross.png";
 
 for (i=0;i<4;i++) {
@@ -91,7 +90,7 @@ function run(){
 function entw1(){
 	svetfull=0;
 	for (i=0;i<4;i++){
-		svetTime[i]=document.getElementById("sv"+i).value;
+		svetTime[i]=document.getElementById("sv"+(i+1)).value;
 		svetfull+=svetTime[i];
 	}
 	speed=document.getElementById("speed").value;
