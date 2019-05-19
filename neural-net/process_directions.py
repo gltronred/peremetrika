@@ -85,11 +85,11 @@ def main():
         elif event == cv2.EVENT_MOUSEMOVE:
             drag_pos = (x, y)
 
-    video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec.mp4")
+    video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec_3.mp4")
     ret, first_frame = video_capture.read()
     frame = first_frame.copy()
 
-    with open('directions.json', 'r') as f:
+    with open('directions_3.json', 'r') as f:
         directions = json.load(f)
 
     for v in directions.values():
@@ -123,7 +123,7 @@ def main():
             if len(boxes) > 0:
                 del boxes[-1]
         if key & 0xFF == ord('s'):
-            save_tracks(directions.values(), boxes, first_frame, 'directions_processed.json')
+            save_tracks(directions.values(), boxes, first_frame, 'directions_processed_3.json')
 
 
 if __name__ == '__main__':

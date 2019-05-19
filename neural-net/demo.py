@@ -47,7 +47,7 @@ def main(yolo):
 
     writeVideo_flag = False
     
-    video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec.mp4")
+    video_capture = cv2.VideoCapture("/Users/alex/Desktop/cross_rec_44.mp4")
     # video_capture = cv2.VideoCapture(0)
 
     if writeVideo_flag:
@@ -68,6 +68,9 @@ def main(yolo):
         ret, frame = video_capture.read()  # frame shape 640*480*3
         if ret != True:
             break
+        if frame_id % 3 != 0:
+            continue
+
         t1 = time.time()
 
        # image = Image.fromarray(frame)
@@ -132,7 +135,7 @@ def main(yolo):
         list_file.close()
     cv2.destroyAllWindows()
 
-    save_directions(json.dumps(directions), 'directions.json')
+    save_directions(json.dumps(directions), 'directions_44_tempqw.json')
 
 if __name__ == '__main__':
     main(YOLO())
